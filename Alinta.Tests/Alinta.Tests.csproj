@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Alinta.csproj"/>
+    <ProjectReference Include="..\Alinta\Alinta.csproj"/>
   </ItemGroup>
 
 </Project>

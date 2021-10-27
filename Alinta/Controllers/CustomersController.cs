@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Alinta.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Alinta.Controllers
 {
@@ -14,12 +13,10 @@ namespace Alinta.Controllers
     [Route("[controller]")]
     public class CustomersController : ControllerBase
     {
-        private readonly ILogger<CustomersController> _logger;
         private readonly Context _context;
 
-        public CustomersController(ILogger<CustomersController> logger, Context context)
+        public CustomersController(Context context)
         {
-            _logger = logger;
             _context = context;
         }
 
@@ -35,17 +32,19 @@ namespace Alinta.Controllers
 
         [HttpPost]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> Post(CustomerDto customer)
+        public async Task<ActionResult<Customer>> Create(CustomerDto customer)
         {
-            await _context.Customers.AddAsync(new Customer
+            var newCustomer = new Customer
             {
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
                 DateOfBirth = customer.DateOfBirth
-            });
+            };
+
+            await _context.Customers.AddAsync(newCustomer);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return newCustomer;
         }
 
         [HttpPut("{id}")]
